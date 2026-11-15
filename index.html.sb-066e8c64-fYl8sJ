@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Beat Lab | DJ & Guitar Lessons, Workshops & Merch</title>
+    <!-- Tailwind CSS for modern, responsive styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .vinyl-spin { animation: spin 20s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* DJ Controller Styled Interactive Buttons / Sliders */
+        .controller-pad {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border: 2px solid #334155;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.05), 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+            transition: all 0.2s ease;
+        }
+        .controller-pad:hover {
+            border-color: #22d3ee;
+            box-shadow: 0 0 15px rgba(34, 211, 238, 0.3), inset 0 2px 4px rgba(255,255,255,0.1);
+        }
+        .controller-pad:active {
+            transform: translateY(2px);
+            box-shadow: inset 0 3px 6px rgba(0,0,0,0.8);
+        }
+        
+        /* DJ Fader / Slider Styling */
+        input[type=range] {
+            accent-color: #22d3ee;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen selection:bg-cyan-500 selection:text-slate-950">
+
+    <!-- HEADER / NAV -->
+    <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center font-black text-xl text-slate-950 shadow-lg shadow-cyan-500/20">BL</div>
+                <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">The Beat Lab</span>
+            </div>
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">
+                <a href="#lessons" class="hover:text-cyan-400 transition">Lessons & Booking</a>
+                <a href="#gear" class="hover:text-cyan-400 transition">Gear Selector</a>
+                <a href="#shop" class="hover:text-cyan-400 transition">Merch Shop</a>
+                <a href="#advice" class="hover:text-cyan-400 transition">Buying Guide</a>
+                <a href="#stores" class="hover:text-cyan-400 transition">Irish Stores</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <a href="#shop" class="relative p-2 text-slate-300 hover:text-cyan-400 transition" title="View Cart">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                    <span id="cartCount" class="absolute top-0 right-0 w-5 h-5 bg-cyan-500 text-slate-950 text-xs font-black rounded-full flex items-center justify-center shadow">0</span>
+                </a>
+                <a href="#lessons" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-5 py-2.5 rounded-xl transition shadow-lg shadow-cyan-500/20 text-sm hidden sm:inline-block">
+                    Book Session
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-28">
+
+        <!-- HERO SECTION WITH AUDIO PLAYER & SERATO-STYLE EQ / VISUALIZER -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center pt-8">
+            <div class="lg:col-span-7 space-y-6">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold uppercase tracking-wider">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                    <span>Pro DJ Tutoring, Guitar Lessons & Workshops</span>
+                </div>
+                <h1 class="text-4xl sm:text-6xl font-black tracking-tight leading-tight">
+                    Master the Mix. <br><span class="bg-gradient-to-r from-cyan-400 via-indigo-400 to-purple-500 bg-clip-text text-transparent">Spin & String Your Sound.</span>
+                </h1>
+                <p class="text-lg text-slate-400 max-w-xl leading-relaxed">
+                    Inclusive DJ instruction, after-school small groups, autism-friendly Saturday workshops, and Tuesday/Wednesday guitar lessons in Portlaoise.
+                </p>
+
+                <!-- Mini Audio Preview Player & Serato-Style EQ Panel -->
+                <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 max-w-lg space-y-4 shadow-xl">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <button id="playBtn" onclick="toggleAudio()" class="w-12 h-12 rounded-2xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 flex items-center justify-center font-bold transition shadow-lg shadow-cyan-500/20 controller-pad active:scale-95">
+                                <svg id="playIcon" class="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </button>
+                            <div>
+                                <h4 id="trackTitle" class="text-xs font-bold text-slate-200">The Beat Lab - Deck 1 Master Mix</h4>
+                                <p class="text-[10px] text-cyan-400 font-mono">SERATO DJ PRO // 124.0 BPM</p>
+                            </div>
+                        </div>
+                        <span id="trackTime" class="text-xs font-mono text-cyan-400 bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-800">0:00 / 0:30</span>
+                    </div>
+
+                    <!-- Serato-Style Equalizer & Spectrum Analyzer Screen -->
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-3">
+                        <div class="flex justify-between items-center text-[10px] font-mono text-slate-400 uppercase tracking-widest border-b border-slate-900 pb-1.5">
+                            <span>Spectrum Analyzer / 3-Band EQ</span>
+                            <span class="text-emerald-400">● LIVE DECK</span>
+                        </div>
+                        <!-- Frequency Visualizer Bars -->
+                        <div id="visualizer" class="flex items-end justify-between h-14 px-1 space-x-1">
+                            <span class="w-2 bg-cyan-500/40 h-4 rounded-t transition-all duration-150"></span>
+                            <span class="w-2 bg-cyan-500/60 h-8 rounded-t transition-all duration-150"></span>
+                            <span class="w-2 bg-cyan-500/80 h-12 rounded-t transition-all duration-150"></span>
+                            <span class="w-2 bg-cyan-400 h-10 rounded-t transition-all duration-150"></span>
+                            <span class="w-2 bg-indigo-500 h-6 rounded-t transition-all duration-150"></span>
+                            <span class="w-2 bg-indigo-500/80 h-10 rounded-t transition-all duration-150"></span>
+                            <span class="w-2 bg-indigo-400 h-14 rounded-t transition-all duration-150"></span>
+                            <span class="w-2 bg-purple-500 h-8 rounded-t transition-all duration-150"></span>
+                            <span class="w-2 bg-purple-400 h-12 rounded-t transition-all duration-150"></span>
+                            <span class="w-2 bg-pink-500 h-9 rounded-t transition-all duration-150"></span>
+                            <span class="w-2 bg-pink-400 h-5 rounded-t transition-all duration-150"></span>
+                            <span class="w-2 bg-cyan-500 h-7 rounded-t transition-all duration-150"></span>
+                        </div>
+                        <!-- EQ Slider Controls -->
+                        <div class="grid grid-cols-3 gap-3 pt-2 border-t border-slate-900 text-[10px] font-mono text-slate-400">
+                            <div class="space-y-1">
+                                <div class="flex justify-between"><span>HI</span><span id="hiVal" class="text-cyan-400">+0dB</span></div>
+                                <input type="range" min="-24" max="6" value="0" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" oninput="updateEQ('hi', this.value)">
+                            </div>
+                            <div class="space-y-1">
+                                <div class="flex justify-between"><span>MID</span><span id="midVal" class="text-indigo-400">+0dB</span></div>
+                                <input type="range" min="-24" max="6" value="0" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" oninput="updateEQ('mid', this.value)">
+                            </div>
+                            <div class="space-y-1">
+                                <div class="flex justify-between"><span>LOW</span><span id="lowVal" class="text-purple-400">+0dB</span></div>
+                                <input type="range" min="-24" max="6" value="0" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" oninput="updateEQ('low', this.value)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-4 pt-2">
+                    <a href="#lessons" class="controller-pad bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-8 py-4 rounded-xl transition shadow-xl shadow-cyan-500/20 flex items-center space-x-2">
+                        <span>Book a Lesson / Guitar Slot</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </a>
+                    <a href="#shop" class="controller-pad bg-slate-900 hover:bg-slate-800 text-slate-200 font-semibold px-6 py-4 rounded-xl transition">
+                        Browse T-Shirts 👕
+                    </a>
+                </div>
+            </div>
+            
+            <div class="lg:col-span-5 flex justify-center">
+                <div class="relative w-72 h-72 sm:w-80 sm:h-80 rounded-full bg-gradient-to-tr from-cyan-500/20 to-indigo-600/20 p-4 border border-slate-800 shadow-2xl flex items-center justify-center">
+                    <div class="w-full h-full rounded-full bg-slate-950 border-4 border-slate-800 relative flex items-center justify-center vinyl-spin shadow-inner">
+                        <div class="absolute inset-4 rounded-full border border-slate-800/80"></div>
+                        <div class="absolute inset-12 rounded-full border border-slate-800/60"></div>
+                        <div class="absolute inset-20 rounded-full border border-slate-800/40"></div>
+                        <!-- Center record label -->
+                        <div class="w-28 h-28 rounded-full bg-gradient-to-tr from-cyan-500 to-indigo-600 flex flex-col items-center justify-center text-slate-950 p-2 text-center shadow-lg">
+                            <span class="text-[10px] font-black uppercase tracking-widest">The Beat Lab</span>
+                            <span class="text-[9px] font-bold opacity-80">Portlaoise</span>
+                            <div class="w-4 h-4 rounded-full bg-slate-950 mt-1"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 1: LESSONS, GUITAR TAB & SPECIALIZED WORKSHOPS -->
+        <section id="lessons" class="space-y-8 scroll-mt-24">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <h2 class="text-3xl font-extrabold tracking-tight">Lesson Packages & Workshops</h2>
+                    <p class="text-slate-400 text-sm mt-1">Choose from DJ tutoring, Tuesday/Wednesday after-school guitar lessons, small group classes, and autism-friendly Saturday workshops.</p>
+                </div>
+                <div class="flex flex-wrap bg-slate-900 p-1 rounded-xl border border-slate-800 text-xs font-semibold gap-1">
+                    <button onclick="filterLessons('all')" id="btn-all" class="controller-pad px-3 py-2 rounded-lg bg-cyan-500 text-slate-950 transition">All Options</button>
+                    <button onclick="filterLessons('guitar')" id="btn-guitar" class="controller-pad px-3 py-2 rounded-lg text-slate-300 hover:text-white transition">Guitar Lessons 🎸</button>
+                    <button onclick="filterLessons('beginner')" id="btn-beginner" class="controller-pad px-3 py-2 rounded-lg text-slate-300 hover:text-white transition">DJ Beginner</button>
+                    <button onclick="filterLessons('group')" id="btn-group" class="controller-pad px-3 py-2 rounded-lg text-slate-300 hover:text-white transition">Monday DJ (Group)</button>
+                    <button onclick="filterLessons('specialized')" id="btn-specialized" class="controller-pad px-3 py-2 rounded-lg text-slate-300 hover:text-white transition">Autism & SEN</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Lesson Card 1: NEW Guitar Lessons Tab -->
+                <div class="lesson-card controller-pad bg-slate-900/80 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between hover:border-cyan-500/50 transition group" data-category="guitar">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-start">
+                            <span class="px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 text-xs font-bold border border-amber-500/20">After-School Guitar</span>
+                            <span class="text-2xl font-black text-white">€30</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold group-hover:text-cyan-400 transition">Guitar Lessons (Tue & Wed)</h3>
+                            <p class="text-sm text-slate-400 mt-2">Directly after school from <strong>2:40 PM to 3:40 PM</strong> on Tuesdays or Wednesdays. Acoustic & electric fundamentals, chords, and song playing.</p>
+                        </div>
+                        <ul class="space-y-2 text-xs text-slate-300 pt-2">
+                            <li class="flex items-center space-x-2"><span>✓</span><span>Tuesday or Wednesday 2:40 - 3:40pm</span></li>
+                            <li class="flex items-center space-x-2"><span>✓</span><span>Acoustic, electric & TAB reading</span></li>
+                            <li class="flex items-center space-x-2"><span>✓</span><span>Beginner to intermediate levels</span></li>
+                        </ul>
+                    </div>
+                    <button onclick="openGuitarModal()" class="controller-pad mt-6 w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 rounded-xl transition text-sm shadow-lg shadow-amber-500/20">
+                        Book Guitar Slot 🎸
+                    </button>
+                </div>
+
+                <!-- Lesson Card 2: DJ Starter -->
+                <div class="lesson-card controller-pad bg-slate-900/80 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between hover:border-cyan-500/50 transition group" data-category="beginner">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-start">
+                            <span class="px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-bold border border-cyan-500/20">Starter Session</span>
+                            <span class="text-2xl font-black text-white">€35</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold group-hover:text-cyan-400 transition">Introduction to DJing</h3>
+                            <p class="text-sm text-slate-400 mt-2">1-hour foundational 1-on-1 workshop covering beat structure, cue points, basic mixing, and controller navigation.</p>
+                        </div>
+                        <ul class="space-y-2 text-xs text-slate-300 pt-2">
+                            <li class="flex items-center space-x-2"><span>✓</span><span>1-on-1 hands-on hardware practice</span></li>
+                            <li class="flex items-center space-x-2"><span>✓</span><span>Understanding bar structures & BPM</span></li>
+                            <li class="flex items-center space-x-2"><span>✓</span><span>No prior experience necessary</span></li>
+                        </ul>
+                    </div>
+                    <button onclick="openBookingModal('Introduction to DJing (1-on-1)', '€35')" class="controller-pad mt-6 w-full bg-slate-800 hover:bg-cyan-500 hover:text-slate-950 text-slate-200 font-bold py-3 rounded-xl transition text-sm">
+                        Book DJ Session
+                    </button>
+                </div>
+
+                <!-- Lesson Card 3: Monday After-School for Three -->
+                <div class="lesson-card controller-pad bg-slate-900/80 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between hover:border-cyan-500/50 transition group" data-category="group">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-start">
+                            <span class="px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 text-xs font-bold border border-indigo-500/20">Monday After-School</span>
+                            <span class="text-2xl font-black text-white">€60 <span class="text-xs font-normal text-slate-400">/ group</span></span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold group-hover:text-cyan-400 transition">Small Group DJ Class (Max 3)</h3>
+                            <p class="text-sm text-slate-400 mt-2">Monday evenings designed specifically for a small group of three students. Collaborative learning and multi-controller setups.</p>
+                        </div>
+                        <ul class="space-y-2 text-xs text-slate-300 pt-2">
+                            <li class="flex items-center space-x-2"><span>✓</span><span>Monday evenings (Scheduled slot)</span></li>
+                            <li class="flex items-center space-x-2"><span>✓</span><span>Strictly capped at 3 participants</span></li>
+                            <li class="flex items-center space-x-2"><span>✓</span><span>Interactive teamwork & mixing drills</span></li>
+                        </ul>
+                    </div>
+                    <button onclick="openBookingModal('Monday After-School DJ Class (Group of 3)', '€60')" class="controller-pad mt-6 w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-3 rounded-xl transition text-sm shadow-lg shadow-cyan-500/20">
+                        Book Monday Slot
+                    </button>
+                </div>
+
+                <!-- Lesson Card 4: Saturday Autism & SEN Class -->
+                <div class="lesson-card controller-pad bg-slate-900/80 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between hover:border-cyan-500/50 transition group" data-category="specialized">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-start">
+                            <span class="px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 text-xs font-bold border border-purple-500/20">Saturday Inclusive</span>
+                            <span class="text-2xl font-black text-white">€40</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold group-hover:text-cyan-400 transition">Autism & Special Education DJ Workshop</h3>
+                            <p class="text-sm text-slate-400 mt-2">Saturday sessions tailored using structured teaching strategies, visual schedules, and sensory-friendly pacing in a calm, supportive environment.</p>
+                        </div>
+                        <ul class="space-y-2 text-xs text-slate-300 pt-2">
+                            <li class="flex items-center space-x-2"><span>✓</span><span>Saturday morning scheduled slots</span></li>
+                            <li class="flex items-center space-x-2"><span>✓</span><span>TEACCH structured teaching principles</span></li>
+                            <li class="flex items-center space-x-2"><span>✓</span><span>Sensory-friendly, low-stress environment</span></li>
+                        </ul>
+                    </div>
+                    <button onclick="openBookingModal('Autism & SEN DJ Workshop (Saturday)', '€40')" class="controller-pad mt-6 w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-3 rounded-xl transition text-sm shadow-lg shadow-cyan-500/20">
+                        Book Saturday Slot
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: INTERACTIVE GEAR & SETUP SELECTOR -->
+        <section id="gear" class="space-y-8 scroll-mt-24 pt-8 border-t border-slate-900">
+            <div>
+                <h2 class="text-3xl font-extrabold tracking-tight">Interactive Setup & Gear Selector</h2>
+                <p class="text-slate-400 text-sm mt-1">Click through the controller tiers below to find the exact hardware and software combination that suits your budget.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Tier Switcher Buttons -->
+                <div class="space-y-3">
+                    <button onclick="selectGearTier(0)" id="tierBtn0" class="controller-pad w-full text-left p-4 rounded-2xl border border-cyan-500 bg-cyan-500/10 transition flex items-center justify-between group">
+                        <div>
+                            <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider">Tier 1</span>
+                            <h4 class="text-base font-bold text-white mt-0.5">Tablet & Starter Controller</h4>
+                        </div>
+                        <span class="text-cyan-400 font-bold">→</span>
+                    </button>
+                    <button onclick="selectGearTier(1)" id="tierBtn1" class="controller-pad w-full text-left p-4 rounded-2xl border border-slate-800 bg-slate-900/50 hover:bg-slate-900 transition flex items-center justify-between group">
+                        <div>
+                            <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Tier 2</span>
+                            <h4 class="text-base font-bold text-white mt-0.5">Laptop & Pro Controller</h4>
+                        </div>
+                        <span class="text-slate-500 group-hover:text-indigo-400 transition">→</span>
+                    </button>
+                    <button onclick="selectGearTier(2)" id="tierBtn2" class="controller-pad w-full text-left p-4 rounded-2xl border border-slate-800 bg-slate-900/50 hover:bg-slate-900 transition flex items-center justify-between group">
+                        <div>
+                            <span class="text-xs font-bold text-purple-400 uppercase tracking-wider">Tier 3</span>
+                            <h4 class="text-base font-bold text-white mt-0.5">Standalone Club Rig</h4>
+                        </div>
+                        <span class="text-slate-500 group-hover:text-purple-400 transition">→</span>
+                    </button>
+                </div>
+
+                <!-- Tier Details Display Card -->
+                <div class="controller-pad lg:col-span-2 bg-slate-900 border border-slate-800 rounded-3xl p-8 flex flex-col justify-between space-y-6 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span id="gearTierBadge" class="px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-bold border border-cyan-500/20">Budget-Friendly</span>
+                                <h3 id="gearTierTitle" class="text-2xl font-black text-white mt-2">Tablet & Starter Controller</h3>
+                            </div>
+                            <span id="gearTierPrice" class="text-2xl font-black text-cyan-400">~€200 - €250</span>
+                        </div>
+                        <p id="gearTierDesc" class="text-sm text-slate-300 leading-relaxed">
+                            Perfect for beginners, kids, and quick bedroom practice. Plugs directly into an iPad or phone, running Algoriddim djay or lightweight apps with zero complex laptop setup.
+                        </p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                            <div class="controller-pad bg-slate-950/60 p-4 rounded-2xl border border-slate-800/60">
+                                <span class="text-xs font-bold text-slate-400 uppercase">Recommended Hardware</span>
+                                <p id="gearTierHardware" class="text-sm font-bold text-slate-200 mt-1">AlphaTheta DDJ-FLX2</p>
+                            </div>
+                            <div class="controller-pad bg-slate-950/60 p-4 rounded-2xl border border-slate-800/60">
+                                <span class="text-xs font-bold text-slate-400 uppercase">Software Ecosystem</span>
+                                <p id="gearTierSoftware" class="text-sm font-bold text-slate-200 mt-1">Algoriddim djay / Serato</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+                        <span>Tested & configured during lessons at The Beat Lab</span>
+                        <a href="#stores" class="text-cyan-400 font-bold hover:underline">Check Irish Suppliers →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: MERCH SHOP -->
+        <section id="shop" class="space-y-8 scroll-mt-24 pt-8 border-t border-slate-900">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-2">
+                        <span>Official Apparel</span>
+                    </div>
+                    <h2 class="text-3xl font-extrabold tracking-tight">The Beat Lab Merch Store</h2>
+                    <p class="text-slate-400 text-sm mt-1">High-quality custom DJ & guitar tees printed locally by our trusted print partner. Premium cotton built for booth sessions.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Product 1 -->
+                <div class="controller-pad bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between space-y-6 hover:border-cyan-500/50 transition">
+                    <div class="space-y-4">
+                        <div class="w-full h-52 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-center relative overflow-hidden group">
+                            <div class="absolute inset-0 bg-gradient-to-tr from-cyan-500/10 to-indigo-600/15 group-hover:scale-105 transition duration-500"></div>
+                            <span class="text-6xl select-none">👕</span>
+                            <span class="absolute bottom-3 left-3 px-2.5 py-1 bg-slate-900/80 backdrop-blur rounded-lg text-xs font-bold text-cyan-400">Classic Black</span>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-start">
+                                <h3 class="text-lg font-bold">The Beat Lab Crest Tee</h3>
+                                <span class="text-lg font-black text-white">€25</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">100% heavy ring-spun cotton with durable chest screenprint. Preshrunk fit.</p>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-300 mb-1.5">Select Size:</label>
+                            <div class="flex space-x-2">
+                                <button onclick="selectSize(this, 'S')" class="controller-pad size-btn px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs font-bold hover:border-cyan-500 transition">S</button>
+                                <button onclick="selectSize(this, 'M')" class="controller-pad size-btn px-3 py-1.5 bg-slate-950 border border-cyan-500 text-cyan-400 rounded-lg text-xs font-bold transition">M</button>
+                                <button onclick="selectSize(this, 'L')" class="controller-pad size-btn px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs font-bold hover:border-cyan-500 transition">L</button>
+                                <button onclick="selectSize(this, 'XL')" class="controller-pad size-btn px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs font-bold hover:border-cyan-500 transition">XL</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="addToCart('The Beat Lab Crest Tee', 25)" class="controller-pad w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-3 rounded-xl transition text-sm shadow-lg shadow-cyan-500/20">
+                        Add to Cart - €25
+                    </button>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="controller-pad bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between space-y-6 hover:border-cyan-500/50 transition">
+                    <div class="space-y-4">
+                        <div class="w-full h-52 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-center relative overflow-hidden group">
+                            <div class="absolute inset-0 bg-gradient-to-tr from-indigo-500/10 to-purple-600/15 group-hover:scale-105 transition duration-500"></div>
+                            <span class="text-6xl select-none">🎸</span>
+                            <span class="absolute bottom-3 left-3 px-2.5 py-1 bg-slate-900/80 backdrop-blur rounded-lg text-xs font-bold text-amber-400">Guitar Edition</span>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-start">
+                                <h3 class="text-lg font-bold">Fretboard & Vinyl Tee</h3>
+                                <span class="text-lg font-black text-white">€25</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">Features guitar fretboard and vinyl waveform hybrid design. Soft ringspun cotton.</p>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-300 mb-1.5">Select Size:</label>
+                            <div class="flex space-x-2">
+                                <button onclick="selectSize(this, 'S')" class="controller-pad size-btn px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs font-bold hover:border-cyan-500 transition">S</button>
+                                <button onclick="selectSize(this, 'M')" class="controller-pad size-btn px-3 py-1.5 bg-slate-950 border border-cyan-500 text-cyan-400 rounded-lg text-xs font-bold transition">M</button>
+                                <button onclick="selectSize(this, 'L')" class="controller-pad size-btn px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs font-bold hover:border-cyan-500 transition">L</button>
+                                <button onclick="selectSize(this, 'XL')" class="controller-pad size-btn px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs font-bold hover:border-cyan-500 transition">XL</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="addToCart('Fretboard & Vinyl Tee', 25)" class="controller-pad w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-3 rounded-xl transition text-sm shadow-lg shadow-cyan-500/20">
+                        Add to Cart - €25
+                    </button>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="controller-pad bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between space-y-6 hover:border-cyan-500/50 transition">
+                    <div class="space-y-4">
+                        <div class="w-full h-52 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-center relative overflow-hidden group">
+                            <div class="absolute inset-0 bg-gradient-to-tr from-purple-500/10 to-pink-600/15 group-hover:scale-105 transition duration-500"></div>
+                            <span class="text-6xl select-none">🎚️</span>
+                            <span class="absolute bottom-3 left-3 px-2.5 py-1 bg-slate-900/80 backdrop-blur rounded-lg text-xs font-bold text-purple-400">Limited Edition</span>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-start">
+                                <h3 class="text-lg font-bold">Portlaoise Sound Hoodie</h3>
+                                <span class="text-lg font-black text-white">€45</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">Heavyweight cotton pullover hoodie with embroidered Beat Lab chest badge.</p>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-300 mb-1.5">Select Size:</label>
+                            <div class="flex space-x-2">
+                                <button onclick="selectSize(this, 'S')" class="controller-pad size-btn px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs font-bold hover:border-cyan-500 transition">S</button>
+                                <button onclick="selectSize(this, 'M')" class="controller-pad size-btn px-3 py-1.5 bg-slate-950 border border-cyan-500 text-cyan-400 rounded-lg text-xs font-bold transition">M</button>
+                                <button onclick="selectSize(this, 'L')" class="controller-pad size-btn px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs font-bold hover:border-cyan-500 transition">L</button>
+                                <button onclick="selectSize(this, 'XL')" class="controller-pad size-btn px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs font-bold hover:border-cyan-500 transition">XL</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="addToCart('Portlaoise Sound Hoodie', 45)" class="controller-pad w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-3 rounded-xl transition text-sm shadow-lg shadow-cyan-500/20">
+                        Add to Cart - €45
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: FAQ ACCORDION -->
+        <section class="space-y-8 pt-8 border-t border-slate-900">
+            <div>
+                <h2 class="text-3xl font-extrabold tracking-tight">Frequently Asked Questions</h2>
+                <p class="text-slate-400 text-sm mt-1">Everything you need to know about lessons, hardware, and workshops.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="controller-pad bg-slate-900/60 border border-slate-800 rounded-2xl p-6 space-y-2 cursor-pointer hover:border-cyan-500/40 transition" onclick="toggleFaq(this)">
+                    <div class="flex justify-between items-center font-bold text-slate-200">
+                        <span>How do the Tuesday & Wednesday Guitar Lessons work?</span>
+                        <span class="text-cyan-400 text-lg faq-icon">+</span>
+                    </div>
+                    <p class="text-sm text-slate-400 hidden pt-2 leading-relaxed">Guitar lessons run directly after school from 2:40 PM to 3:40 PM on Tuesdays and Wednesdays. Students can pick their preferred day via our booking form for acoustic or electric guitar instruction.</p>
+                </div>
+
+                <div class="controller-pad bg-slate-900/60 border border-slate-800 rounded-2xl p-6 space-y-2 cursor-pointer hover:border-cyan-500/40 transition" onclick="toggleFaq(this)">
+                    <div class="flex justify-between items-center font-bold text-slate-200">
+                        <span>How do the Monday After-School small group DJ classes work?</span>
+                        <span class="text-cyan-400 text-lg faq-icon">+</span>
+                    </div>
+                    <p class="text-sm text-slate-400 hidden pt-2 leading-relaxed">Our Monday after-school classes are strictly capped at a small group of three students. This ensures hands-on controller time for everyone while fostering collaborative learning.</p>
+                </div>
+
+                <div class="controller-pad bg-slate-900/60 border border-slate-800 rounded-2xl p-6 space-y-2 cursor-pointer hover:border-cyan-500/40 transition" onclick="toggleFaq(this)">
+                    <div class="flex justify-between items-center font-bold text-slate-200">
+                        <span>What is included in the Saturday Autism & SEN DJ Workshops?</span>
+                        <span class="text-cyan-400 text-lg faq-icon">+</span>
+                    </div>
+                    <p class="text-sm text-slate-400 hidden pt-2 leading-relaxed">Held on Saturday mornings, these sessions utilize structured teaching strategies (TEACCH framework), visual schedules, and sensory-friendly pacing in a supportive, low-stimulus environment.</p>
+                </div>
+
+                <div class="controller-pad bg-slate-900/60 border border-slate-800 rounded-2xl p-6 space-y-2 cursor-pointer hover:border-cyan-500/40 transition" onclick="toggleFaq(this)">
+                    <div class="flex justify-between items-center font-bold text-slate-200">
+                        <span>How do the t-shirt orders get printed and delivered?</span>
+                        <span class="text-cyan-400 text-lg faq-icon">+</span>
+                    </div>
+                    <p class="text-sm text-slate-400 hidden pt-2 leading-relaxed">All apparel is custom-printed in Ireland by our partner print company using premium cotton and durable screenprinting techniques. Items can be collected directly at your next lesson or shipped nationwide.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: RECOMMENDED STORES -->
+        <section id="stores" class="space-y-8 scroll-mt-24 pt-8 border-t border-slate-900">
+            <div>
+                <h2 class="text-3xl font-extrabold tracking-tight">Recommended Music Stores & Suppliers</h2>
+                <p class="text-slate-400 text-sm mt-1">Trusted Irish music shops and dedicated DJ supply specialists to source your gear.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Store 1 -->
+                <div class="controller-pad bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between space-y-4">
+                    <div>
+                        <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider">Specialist DJ Shop</span>
+                        <h3 class="text-lg font-bold mt-1">DJBox.ie</h3>
+                        <p class="text-xs text-slate-400 mt-2">Ireland's leading specialist in DJ equipment, professional audio, and lighting, based in Tallaght, Dublin.</p>
+                    </div>
+                    <a href="https://www.djbox.ie" target="_blank" rel="noopener noreferrer" class="controller-pad inline-flex items-center justify-center w-full bg-slate-800 hover:bg-cyan-500 hover:text-slate-950 text-slate-200 text-xs font-bold py-2.5 rounded-xl transition">
+                        Visit Website ↗
+                    </a>
+                </div>
+
+                <!-- Store 2 -->
+                <div class="controller-pad bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between space-y-4">
+                    <div>
+                        <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Sound & Lighting</span>
+                        <h3 class="text-lg font-bold mt-1">DJ Solutions</h3>
+                        <p class="text-xs text-slate-400 mt-2">Based in Kilkenny, offering a comprehensive catalogue of controllers, mixers, PA systems, and studio hardware.</p>
+                    </div>
+                    <a href="https://www.dj-solutions.ie" target="_blank" rel="noopener noreferrer" class="controller-pad inline-flex items-center justify-center w-full bg-slate-800 hover:bg-cyan-500 hover:text-slate-950 text-slate-200 text-xs font-bold py-2.5 rounded-xl transition">
+                        Visit Website ↗
+                    </a>
+                </div>
+
+                <!-- Store 3 -->
+                <div class="controller-pad bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between space-y-4">
+                    <div>
+                        <span class="text-xs font-bold text-purple-400 uppercase tracking-wider">Pro Audio Supplier</span>
+                        <h3 class="text-lg font-bold mt-1">Sounds Around</h3>
+                        <p class="text-xs text-slate-400 mt-2">Dublin-based experts with decades of experience stocking top-tier DJ mixers, turntables, and monitoring gear.</p>
+                    </div>
+                    <a href="https://www.soundsaround.ie" target="_blank" rel="noopener noreferrer" class="controller-pad inline-flex items-center justify-center w-full bg-slate-800 hover:bg-cyan-500 hover:text-slate-950 text-slate-200 text-xs font-bold py-2.5 rounded-xl transition">
+                        Visit Website ↗
+                    </a>
+                </div>
+
+                <!-- Store 4 -->
+                <div class="controller-pad bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between space-y-4">
+                    <div>
+                        <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Midlands Music Shop</span>
+                        <h3 class="text-lg font-bold mt-1">Anthem Music</h3>
+                        <p class="text-xs text-slate-400 mt-2">Local instrument retailer located right on Main Street in Portlaois, Co. Laois.</p>
+                    </div>
+                    <a href="https://downtownportlaoise.ie/directory/business-listing/arts-and-entertainment/anthem-music/" target="_blank" rel="noopener noreferrer" class="controller-pad inline-flex items-center justify-center w-full bg-slate-800 hover:bg-cyan-500 hover:text-slate-950 text-slate-200 text-xs font-bold py-2.5 rounded-xl transition">
+                        View Local Info ↗
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="controller-pad border-t border-slate-900 mt-28 py-12 bg-slate-950 text-slate-500 text-xs text-center">
+        <p>&copy; 2026 The Beat Lab, Portlaoise, Co. Laois. All rights reserved. Professional DJ Tutoring, Guitar Lessons & Merchandise.</p>
+    </footer>
+
+    <!-- DJ BOOKING MODAL -->
+    <div id="bookingModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="controller-pad bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 space-y-6 shadow-2xl relative">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h3 id="modalTitle" class="text-lg font-bold text-white">Book Session</h3>
+                    <p id="modalPrice" class="text-cyan-400 font-semibold text-sm">Price</p>
+                </div>
+                <button onclick="closeBookingModal()" class="controller-pad w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition">✕</button>
+            </div>
+            
+            <form id="bookingForm" onsubmit="handleBookingSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Your Name / Parent Name</label>
+                    <input type="text" required class="controller-pad w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500 transition" placeholder="e.g. Alex Murphy">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Email Address</label>
+                    <input type="email" required class="controller-pad w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500 transition" placeholder="alex@example.com">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Preferred Musical Style / Genre</label>
+                    <select class="controller-pad w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500 transition">
+                        <option>Electronic / House / Techno</option>
+                        <option>Hip-Hop & R&B</option>
+                        <option>90s Britpop, Indie & Rock</option>
+                        <option>Traditional / Folk Fusion</option>
+                        <option>Open Format / Commercial Club</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Preferred Date & Time</label>
+                    <input type="datetime-local" required class="controller-pad w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500 transition">
+                </div>
+                <button type="submit" class="controller-pad w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-3.5 rounded-xl transition text-sm shadow-lg shadow-cyan-500/20">
+                    Confirm Booking Request
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- GUITAR BOOKING MODAL (TUE & WED 2:40 - 3:40 PM) -->
+    <div id="guitarModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="controller-pad bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 space-y-6 shadow-2xl relative">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h3 class="text-lg font-bold text-white">After-School Guitar Lessons</h3>
+                    <p class="text-amber-400 font-semibold text-sm">€30 / Session (2:40 PM - 3:40 PM)</p>
+                </div>
+                <button onclick="closeGuitarModal()" class="controller-pad w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition">✕</button>
+            </div>
+            
+            <form id="guitarForm" onsubmit="handleGuitarSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Student / Parent Name</label>
+                    <input type="text" required class="controller-pad w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500 transition" placeholder="e.g. Liam O'Brien">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Email Address</label>
+                    <input type="email" required class="controller-pad w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500 transition" placeholder="liam@example.com">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Select After-School Day (2:40pm - 3:40pm)</label>
+                    <select id="guitarDaySelect" class="controller-pad w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500 transition">
+                        <option value="Tuesday">Tuesday (2:40 PM - 3:40 PM)</option>
+                        <option value="Wednesday">Wednesday (2:40 PM - 3:40 PM)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Guitar Type</label>
+                    <select class="controller-pad w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500 transition">
+                        <option>Acoustic Guitar</option>
+                        <option>Electric Guitar</option>
+                        <option>Both / Beginner Fundamentals</option>
+                    </select>
+                </div>
+                <button type="submit" class="controller-pad w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3.5 rounded-xl transition text-sm shadow-lg shadow-amber-500/20">
+                    Confirm Guitar Booking (€30)
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- SUCCESS TOAST -->
+    <div id="toast" class="controller-pad fixed bottom-6 right-6 bg-emerald-500 text-slate-950 px-6 py-3 rounded-2xl font-bold shadow-2xl hidden transform translate-y-10 opacity-0 transition-all duration-300 z-50">
+        Action completed successfully!
+    </div>
+
+    <script>
+        // Audio Player Simulation & Serato EQ / Spectrum Visualizer
+        let isPlaying = false;
+        let audioInterval;
+        let currentTime = 0;
+
+        function toggleAudio() {
+            const playBtn = document.getElementById('playBtn');
+            const playIcon = document.getElementById('playIcon');
+            const visualizerBars = document.querySelectorAll('#visualizer span');
+
+            isPlaying = !isPlaying;
+
+            if(isPlaying) {
+                playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+                playBtn.classList.add('animate-pulse');
+                
+                audioInterval = setInterval(() => {
+                    currentTime++;
+                    if(currentTime > 30) currentTime = 0;
+                    
+                    let secs = currentTime < 10 ? '0' + currentTime : currentTime;
+                    document.getElementById('trackTime').innerText = `0:${secs} / 0:30`;
+
+                    visualizerBars.forEach(bar => {
+                        let randomHeight = Math.floor(Math.random() * 42) + 8;
+                        bar.style.height = randomHeight + 'px';
+                    });
+                }, 150);
+            } else {
+                playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+                playBtn.classList.remove('animate-pulse');
+                clearInterval(audioInterval);
+                document.getElementById('trackTime').innerText = '0:00 / 0:30';
+                visualizerBars.forEach((bar, idx) => {
+                    bar.style.height = (12 + (idx % 4) * 8) + 'px';
+                });
+            }
+        }
+
+        // EQ Knob / Slider updates
+        function updateEQ(band, val) {
+            const formatted = val > 0 ? `+${val}dB` : `${val}dB`;
+            if(band === 'hi') document.getElementById('hiVal').innerText = formatted;
+            if(band === 'mid') document.getElementById('midVal').innerText = formatted;
+            if(band === 'low') document.getElementById('lowVal').innerText = formatted;
+        }
+
+        // Cart counter
+        let cartCount = 0;
+        function addToCart(itemTitle, price) {
+            cartCount++;
+            document.getElementById('cartCount').innerText = cartCount;
+            
+            const toast = document.getElementById('toast');
+            toast.innerText = `Added "${itemTitle}" to cart! (€${price})`;
+            toast.classList.remove('hidden', 'translate-y-10', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => toast.classList.add('hidden'), 300);
+            }, 3500);
+        }
+
+        // Size selector helper
+        function selectSize(btn, size) {
+            const parent = btn.parentElement;
+            parent.querySelectorAll('.size-btn').forEach(b => {
+                b.className = 'controller-pad size-btn px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs font-bold hover:border-cyan-500 transition';
+            });
+            btn.className = 'controller-pad size-btn px-3 py-1.5 bg-slate-950 border border-cyan-500 text-cyan-400 rounded-lg text-xs font-bold transition';
+        }
+
+        // Interactive Gear Tier Data
+        const gearTiers = [
+            {
+                badge: 'Budget-Friendly / Starter',
+                title: 'Tablet & Starter Controller',
+                price: '~€200 - €250',
+                desc: 'Perfect for beginners, kids, and quick bedroom practice. Plugs directly into an iPad or phone, running Algoriddim djay or lightweight apps with zero complex laptop setup.',
+                hardware: 'AlphaTheta DDJ-FLX2',
+                software: 'Algoriddim djay / Serato'
+            },
+            {
+                badge: 'Most Popular / Pro Prep',
+                title: 'Laptop & Pro Controller',
+                price: '~€350 - €500',
+                desc: 'The industry sweet spot. Connects to your MacBook or PC running full Serato DJ Pro or rekordbox. Gives you full multi-FX control, performance pads, and deep library management.',
+                hardware: 'Pioneer DDJ-FLX4',
+                software: 'Serato DJ Pro / rekordbox'
+            },
+            {
+                badge: 'Club Standard / Standalone',
+                title: 'Standalone Club Rig',
+                price: '~€1,400+',
+                desc: 'No laptop required. USB-drive ready standalone systems modeled after club standard CDJ setups. Perfect for mobile DJs, venue residency prep, and professional gigs.',
+                hardware: 'Pioneer XDJ-RR / Denon Prime',
+                software: 'Standalone Engine / rekordbox USB'
+            }
+        ];
+
+        function selectGearTier(index) {
+            for(let i=0; i<3; i++) {
+                const btn = document.getElementById(`tierBtn${i}`);
+                if(i === index) {
+                    btn.className = 'controller-pad w-full text-left p-4 rounded-2xl border border-cyan-500 bg-cyan-500/10 transition flex items-center justify-between group';
+                } else {
+                    btn.className = 'controller-pad w-full text-left p-4 rounded-2xl border border-slate-800 bg-slate-900/50 hover:bg-slate-900 transition flex items-center justify-between group';
+                }
+            }
+
+            const data = gearTiers[index];
+            document.getElementById('gearTierBadge').innerText = data.badge;
+            document.getElementById('gearTierTitle').innerText = data.title;
+            document.getElementById('gearTierPrice').innerText = data.price;
+            document.getElementById('gearTierDesc').innerText = data.desc;
+            document.getElementById('gearTierHardware').innerText = data.hardware;
+            document.getElementById('gearTierSoftware').innerText = data.software;
+        }
+
+        // FAQ Toggle
+        function toggleFaq(card) {
+            const p = card.querySelector('p');
+            const icon = card.querySelector('.faq-icon');
+            if(p.classList.contains('hidden')) {
+                p.classList.remove('hidden');
+                icon.innerText = '−';
+            } else {
+                p.classList.add('hidden');
+                icon.innerText = '+';
+            }
+        }
+
+        // Filter lessons logic
+        function filterLessons(category) {
+            const cards = document.querySelectorAll('.lesson-card');
+            const allBtn = document.getElementById('btn-all');
+            const guitarBtn = document.getElementById('btn-guitar');
+            const begBtn = document.getElementById('btn-beginner');
+            const groupBtn = document.getElementById('btn-group');
+            const specBtn = document.getElementById('btn-specialized');
+
+            [allBtn, guitarBtn, begBtn, groupBtn, specBtn].forEach(b => {
+                b.className = 'controller-pad px-3 py-2 rounded-lg text-slate-300 hover:text-white transition';
+            });
+
+            if(category === 'all') {
+                allBtn.className = 'controller-pad px-3 py-2 rounded-lg bg-cyan-500 text-slate-950 transition';
+                cards.forEach(c => c.style.display = 'flex');
+            } else if(category === 'guitar') {
+                guitarBtn.className = 'controller-pad px-3 py-2 rounded-lg bg-cyan-500 text-slate-950 transition';
+                cards.forEach(c => {
+                    c.style.display = c.getAttribute('data-category') === 'guitar' ? 'flex' : 'none';
+                });
+            } else if(category === 'beginner') {
+                begBtn.className = 'controller-pad px-3 py-2 rounded-lg bg-cyan-500 text-slate-950 transition';
+                cards.forEach(c => {
+                    c.style.display = c.getAttribute('data-category') === 'beginner' ? 'flex' : 'none';
+                });
+            } else if(category === 'group') {
+                groupBtn.className = 'controller-pad px-3 py-2 rounded-lg bg-cyan-500 text-slate-950 transition';
+                cards.forEach(c => {
+                    c.style.display = c.getAttribute('data-category') === 'group' ? 'flex' : 'none';
+                });
+            } else if(category === 'specialized') {
+                specBtn.className = 'controller-pad px-3 py-2 rounded-lg bg-cyan-500 text-slate-950 transition';
+                cards.forEach(c => {
+                    c.style.display = c.getAttribute('data-category') === 'specialized' ? 'flex' : 'none';
+                });
+            }
+        }
+
+        // DJ Modal control
+        function openBookingModal(title, price) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalPrice').innerText = price;
+            const modal = document.getElementById('bookingModal');
+            modal.style.display = 'flex';
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').style.display = 'none';
+        }
+
+        function handleBookingSubmit(event) {
+            event.preventDefault();
+            closeBookingModal();
+            
+            const toast = document.getElementById('toast');
+            toast.innerText = "DJ session booking request submitted successfully!";
+            toast.classList.add('flex');
+            toast.classList.remove('hidden', 'translate-y-10', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => toast.classList.add('hidden'), 300);
+            }, 4000);
+            
+            document.getElementById('bookingForm').reset();
+        }
+
+        // Guitar Modal control
+        function openGuitarModal() {
+            document.getElementById('guitarModal').style.display = 'flex';
+        }
+
+        function closeGuitarModal() {
+            document.getElementById('guitarModal').style.display = 'none';
+        }
+
+        function handleGuitarSubmit(event) {
+            event.preventDefault();
+            closeGuitarModal();
+            
+            const day = document.getElementById('guitarDaySelect').value;
+            const toast = document.getElementById('toast');
+            toast.innerText = `Guitar lesson booked for ${day} (2:40 PM - 3:40 PM)!`;
+            toast.classList.add('flex');
+            toast.classList.remove('hidden', 'translate-y-10', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => toast.classList.add('hidden'), 300);
+            }, 4000);
+            
+            document.getElementById('guitarForm').reset();
+        }
+    </script>
+</body>
+</html>
