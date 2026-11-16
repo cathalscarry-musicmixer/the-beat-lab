@@ -90,3 +90,44 @@
                 </a>
                 <a href="#lessons" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-5 py-2.5 rounded-xl transition shadow-lg shadow-cyan-500/20 text-sm hidden sm:inline-block">
                     Book Session
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-28">
+
+        <!-- HERO SECTION WITH MIXING DESK AUDIO PLAYER & VU METERS -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center pt-8">
+            <div class="lg:col-span-7 space-y-6">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold uppercase tracking-wider mono-font">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                    <span>Pro DJ Tutoring & Guitar Studio in Portlaoise</span>
+                </div>
+                <h1 class="text-4xl sm:text-6xl font-black tracking-tight leading-tight">
+                    Master the Mix. <br><span class="bg-gradient-to-r from-cyan-400 via-indigo-400 to-purple-500 bg-clip-text text-transparent">Spin & String Your Sound.</span>
+                </h1>
+                <p class="text-lg text-slate-400 max-w-xl leading-relaxed">
+                    Inclusive DJ instruction, Monday small group sessions, Saturday Autism & SEN workshops, and Tuesday/Wednesday guitar classes.
+                </p>
+
+                <!-- Mixing Desk Audio Player & Serato-Style Console -->
+                <div class="mixing-desk rounded-2xl p-6 max-w-lg space-y-5 shadow-2xl relative overflow-hidden">
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 via-indigo-500 to-purple-500"></div>
+                    
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                        <div class="flex items-center space-x-3">
+                            <button id="playBtn" onclick="toggleAudio()" class="w-12 h-12 rounded-2xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 flex items-center justify-center font-bold transition shadow-lg shadow-cyan-500/20 controller-pad active:scale-95">
+                                <svg id="playIcon" class="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </button>
+                            <div>
+                                <h4 id="trackTitle" class="text-xs font-bold text-slate-200 mono-font">DECK 1 // SERATO PRO MASTER</h4>
+                                <p class="text-[10px] text-cyan-400 mono-font">124.0 BPM • 4/4 HOUSE MIX</p>
+                            </div>
+                        </div>
+                        <span id="trackTime" class="text-xs mono-font text-cyan-400 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800">0:00 / 0:30</span>
+                    </div>
+
+                    <!-- Mixing Console Screen: Spectrum & Live LED VU Meters -->
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800/90 space-y-4 shadow-inner">
+                        <div class="flex justify-between items-center text
