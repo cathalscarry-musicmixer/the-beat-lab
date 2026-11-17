@@ -1,0 +1,459 @@
+HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Beat Lab | Portlaoise DJ & Guitar Tutoring Studio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .mono-font { font-family: 'JetBrains Mono', monospace; }
+        .vinyl-spin { animation: spin 20s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* Pro Mixer Hardware Deck Styling inspired by professional mixing consoles */
+        .mixing-console {
+            background: linear-gradient(135deg, #070a12 0%, #0f172a 50%, #020617 100%);
+            border: 2px solid #1e293b;
+            box-shadow: inset 0 2px 6px rgba(255,255,255,0.08), 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+        }
+        
+        .hardware-pad {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border: 2px solid #334155;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.06), 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+            transition: all 0.2s ease;
+        }
+        .hardware-pad:hover {
+            border-color: #22d3ee;
+            box-shadow: 0 0 15px rgba(34, 211, 238, 0.35), inset 0 2px 4px rgba(255,255,255,0.1);
+        }
+        
+        /* Rotary Knob & Fader accents */
+        .rotary-knob {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #334155, #090d16);
+            border: 2px solid #475569;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.15);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .rotary-knob::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            width: 2px;
+            height: 12px;
+            background-color: #22d3ee;
+            border-radius: 1px;
+        }
+        input[type=range] { accent-color: #22d3ee; cursor: pointer; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen selection:bg-cyan-500 selection:text-slate-950">
+ 
+    <!-- HEADER NAVIGATION -->
+    <header class="border-b border-slate-800/80 bg-slate-950/90 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-500 to-purple-600 flex items-center justify-center font-black text-xl text-slate-950 shadow-lg shadow-cyan-500/20">BL</div>
+                <div>
+                    <span class="text-lg font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent block">The Beat Lab</span>
+                    <span class="text-[9px] mono-font text-cyan-400 uppercase tracking-widest block -mt-1">Portlaoise Studio</span>
+                </div>
+            </div>
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">
+                <a href="#lessons" class="hover:text-cyan-400 transition">Lessons & Booking</a>
+                <a href="#gear" class="hover:text-cyan-400 transition">Gear Selector</a>
+                <a href="#shop" class="hover:text-cyan-400 transition">Merch Shop</a>
+                <a href="#stores" class="hover:text-cyan-400 transition">Irish Stores</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <a href="#shop" class="relative p-2 text-slate-300 hover:text-cyan-400 transition" title="View Cart">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                    <span id="cartCount" class="absolute top-0 right-0 w-5 h-5 bg-cyan-500 text-slate-950 text-xs font-black rounded-full flex items-center justify-center shadow">0</span>
+                </a>
+                <button onclick="openCheckoutModal('General Studio Credit', 35)" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-5 py-2.5 rounded-xl transition shadow-lg shadow-cyan-500/20 text-sm hidden sm:inline-block">
+                    Pay Now / Checkout
+                </button>
+            </div>
+        </div>
+    </header>
+ 
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-28">
+ 
+        <!-- HERO SECTION WITH HARDWARE DECK & SPECTRUM WAVEFORM -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center pt-8">
+            <div class="lg:col-span-7 space-y-6">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold uppercase tracking-wider mono-font">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                    <span>Professional DJ Tutoring & Guitar Studio in Portlaoise</span>
+                </div>
+                <h1 class="text-4xl sm:text-6xl font-black tracking-tight leading-tight">
+                    Master the Mix. <br><span class="bg-gradient-to-r from-cyan-400 via-indigo-400 to-fuchsia-500 bg-clip-text text-transparent">Spin & String Your Sound.</span>
+                </h1>
+                <p class="text-lg text-slate-400 max-w-xl leading-relaxed">
+                    Equipped with professional multi-channel hardware consoles, studio monitoring headphones, and customized inclusive music tech curricula for all ages and abilities.
+                </p>
+ 
+                <!-- Console Deck Audio Simulator & VU Meters -->
+                <div class="mixing-console rounded-2xl p-6 max-w-lg space-y-5 shadow-2xl relative overflow-hidden">
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 via-indigo-500 to-fuchsia-500"></div>
+                    
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                        <div class="flex items-center space-x-3">
+                            <button id="playBtn" onclick="toggleAudio()" class="w-12 h-12 rounded-2xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 flex items-center justify-center font-bold transition shadow-lg shadow-cyan-500/20 hardware-pad active:scale-95">
+                                <svg id="playIcon" class="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </button>
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-200 mono-font">CONSOLE MASTER // SERATO LIVE</h4>
+                                <p class="text-[10px] text-cyan-400 mono-font">124.0 BPM • CHROMATIC SPECTRUM ACTIVE</p>
+                            </div>
+                        </div>
+                        <span id="trackTime" class="text-xs mono-font text-cyan-400 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800">0:00 / 0:30</span>
+                    </div>
+ 
+                    <!-- Chromatic Soundwave Visualizer (Inspired by color reference spectrums) -->
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-4 shadow-inner">
+                        <div class="flex justify-between items-center text-[10px] mono-font text-slate-400 uppercase tracking-widest border-b border-slate-900 pb-2">
+                            <span>Frequency Spectrum Analyzer</span>
+                            <span class="text-emerald-400">● LIVE MONITOR</span>
+                        </div>
+ 
+                        <div id="visualizer" class="flex items-end justify-between h-14 px-1 space-x-1">
+                            <span class="w-2 bg-rose-500 h-6 rounded-t transition-all duration-150"></span>
+                            <span class="w-2 bg-amber-400 h-10 rounded-t transition-all duration-150"></span>
+                            <span class="w-2 bg-emerald-400 h-12 rounded-t transition-all duration-150"></span>
+                            <span class="w-2 bg-cyan-400 h-14 rounded-t transition-all duration-150"></span>
+                            <span class="w-2 bg-indigo-500 h-8 rounded-t transition-all duration-150"></span>
+                            <span class="w-2 bg-fuchsia-500 h-10 rounded-t transition-all duration-150"></span>
+                            <span class="w-2 bg-rose-400 h-12 rounded-t transition-all duration-150"></span>
+                            <span class="w-2 bg-amber-500 h-7 rounded-t transition-all duration-150"></span>
+                            <span class="w-2 bg-emerald-500 h-11 rounded-t transition-all duration-150"></span>
+                            <span class="w-2 bg-cyan-500 h-9 rounded-t transition-all duration-150"></span>
+                        </div>
+ 
+                        <!-- Stereo VU Meters -->
+                        <div class="space-y-1.5 pt-1">
+                            <div class="flex items-center justify-between text-[9px] mono-font text-slate-500">
+                                <span>L VU</span>
+                                <div id="vuMeterL" class="flex-1 mx-3 h-2 bg-slate-900 rounded-sm overflow-hidden flex space-x-0.5 p-0.5 opacity-70">
+                                    <div class="h-full bg-emerald-500 w-1/3"></div><div class="h-full bg-amber-400 w-1/3"></div><div class="h-full bg-rose-500 w-1/3"></div>
+                                </div>
+                                <span>+3dB</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+ 
+                <div class="flex flex-wrap gap-4 pt-2">
+                    <a href="#lessons" class="hardware-pad bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-8 py-4 rounded-xl transition shadow-xl shadow-cyan-500/20 flex items-center space-x-2">
+                        <span>Book & Pay for Sessions</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Hardware Deck Graphic Representation -->
+            <div class="lg:col-span-5 flex justify-center">
+                <div class="mixing-console relative w-80 h-80 sm:w-96 sm:h-96 rounded-3xl p-6 flex flex-col justify-between shadow-2xl">
+                    <div class="flex justify-between items-center text-[10px] mono-font text-slate-400">
+                        <span class="text-cyan-400 font-bold">DECK 1 // PERFORMANCE SETUP</span>
+                        <span>SERATO PRO</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-center my-auto">
+                        <div class="w-60 h-60 rounded-full bg-slate-950 border-8 border-slate-800 relative flex items-center justify-center vinyl-spin shadow-2xl">
+                            <div class="absolute inset-4 rounded-full border border-slate-800/80"></div>
+                            <div class="absolute inset-16 rounded-full border border-slate-800/50"></div>
+                            <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-cyan-500 to-indigo-600 flex flex-col items-center justify-center text-slate-950 p-2 text-center shadow-lg">
+                                <span class="text-[9px] font-black uppercase tracking-widest">Beat Lab</span>
+                                <span class="text-[8px] font-bold opacity-80">Portlaoise</span>
+                            </div>
+                        </div>
+                    </div>
+ 
+                    <div class="flex justify-between items-center pt-2 border-t border-slate-800 text-[10px] mono-font text-slate-400">
+                        <span>PITCH: 0.0%</span>
+                        <span class="text-emerald-400">STUDIO ACTIVE</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+ 
+        <!-- SECTION 1: LESSON PACKAGES & SECURE CHECKOUT -->
+        <section id="lessons" class="space-y-8 scroll-mt-24">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <h2 class="text-3xl font-extrabold tracking-tight">Lesson Packages & Secure Payments</h2>
+                    <p class="text-slate-400 text-sm mt-1">Select your preferred session and complete secure instant booking via our integrated checkout.</p>
+                </div>
+            </div>
+ 
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Guitar Lesson -->
+                <div class="hardware-pad bg-slate-900/80 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between space-y-6">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-start">
+                            <span class="px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 text-xs font-bold border border-amber-500/20">Guitar (Tue & Wed)</span>
+                            <span class="text-2xl font-black text-white">€30</span>
+                        </div>
+                        <h3 class="text-xl font-bold">After-School Guitar</h3>
+                        <p class="text-xs text-slate-400">2:40 PM - 3:40 PM acoustic & electric fundamentals and chord mastery.</p>
+                    </div>
+                    <button onclick="openCheckoutModal('After-School Guitar Session', 30)" class="hardware-pad w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 rounded-xl transition text-sm shadow-lg shadow-amber-500/20">
+                        Book & Pay €30 💳
+                    </button>
+                </div>
+ 
+                <!-- Starter DJ -->
+                <div class="hardware-pad bg-slate-900/80 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between space-y-6">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-start">
+                            <span class="px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-bold border border-cyan-500/20">1-on-1 Session</span>
+                            <span class="text-2xl font-black text-white">€35</span>
+                        </div>
+                        <h3 class="text-xl font-bold">Introduction to DJing</h3>
+                        <p class="text-xs text-slate-400">1-hour foundational workshop covering beat structures and hardware mixing.</p>
+                    </div>
+                    <button onclick="openCheckoutModal('Introduction to DJing (1-on-1)', 35)" class="hardware-pad w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-3 rounded-xl transition text-sm shadow-lg shadow-cyan-500/20">
+                        Book & Pay €35 💳
+                    </button>
+                </div>
+ 
+                <!-- Monday Group -->
+                <div class="hardware-pad bg-slate-900/80 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between space-y-6">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-start">
+                            <span class="px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 text-xs font-bold border border-indigo-500/20">Monday Group</span>
+                            <span class="text-2xl font-black text-white">€60</span>
+                        </div>
+                        <h3 class="text-xl font-bold">Small Group DJ Class (Max 3)</h3>
+                        <p class="text-xs text-slate-400">Monday evening collaborative multi-controller mixing drills.</p>
+                    </div>
+                    <button onclick="openCheckoutModal('Monday Small Group DJ Class', 60)" class="hardware-pad w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-3 rounded-xl transition text-sm shadow-lg shadow-cyan-500/20">
+                        Book & Pay €60 💳
+                    </button>
+                </div>
+ 
+                <!-- Saturday SEN -->
+                <div class="hardware-pad bg-slate-900/80 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between space-y-6">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-start">
+                            <span class="px-3 py-1 rounded-full bg-fuchsia-500/10 text-fuchsia-400 text-xs font-bold border border-fuchsia-500/20">Saturday SEN</span>
+                            <span class="text-2xl font-black text-white">€40</span>
+                        </div>
+                        <h3 class="text-xl font-bold">Autism & SEN Workshop</h3>
+                        <p class="text-xs text-slate-400">Inclusive structured teaching sessions tailored with sensory-friendly pacing.</p>
+                    </div>
+                    <button onclick="openCheckoutModal('Autism & SEN DJ Workshop', 40)" class="hardware-pad w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-3 rounded-xl transition text-sm shadow-lg shadow-cyan-500/20">
+                        Book & Pay €40 💳
+                    </button>
+                </div>
+            </div>
+        </section>
+ 
+        <!-- SECTION 2: GEAR SELECTOR -->
+        <section id="gear" class="space-y-8 scroll-mt-24 pt-8 border-t border-slate-900">
+            <div>
+                <h2 class="text-3xl font-extrabold tracking-tight">Interactive Setup & Gear Selector</h2>
+                <p class="text-slate-400 text-sm mt-1">Explore recommended hardware tiers tested in our Portlaoise studio.</p>
+            </div>
+ 
+            <div class="mixing-desk rounded-3xl p-8 flex flex-col md:flex-row justify-between items-center gap-8">
+                <div class="space-y-4 max-w-xl">
+                    <span class="px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-bold border border-cyan-500/20">Studio Standard</span>
+                    <h3 class="text-2xl font-black">Professional Monitoring & Console Standards</h3>
+                    <p class="text-sm text-slate-300 leading-relaxed">
+                        Whether practicing on multi-channel software controllers or high-end Sennheiser monitoring headphones, having the right gear ensures crystal clear mixing precision.
+                    </p>
+                </div>
+                <div class="hardware-pad p-6 rounded-2xl border border-slate-800 text-center space-y-3">
+                    <span class="text-4xl">🎧</span>
+                    <h4 class="font-bold text-sm">Studio Monitoring Gear</h4>
+                    <p class="text-xs text-slate-400">High-isolation acoustic fidelity for stage and booth.</p>
+                </div>
+            </div>
+        </section>
+ 
+        <!-- SECTION 3: MERCH SHOP & CHECKOUT -->
+        <section id="shop" class="space-y-8 scroll-mt-24 pt-8 border-t border-slate-900">
+            <div>
+                <h2 class="text-3xl font-extrabold tracking-tight">The Beat Lab Merch Store</h2>
+                <p class="text-slate-400 text-sm mt-1">Official apparel printed locally in Ireland.</p>
+            </div>
+ 
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Product 1 -->
+                <div class="hardware-pad bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between space-y-6">
+                    <div class="space-y-4">
+                        <div class="w-full h-48 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-center text-6xl">👕</div>
+                        <div class="flex justify-between items-start">
+                            <h3 class="text-lg font-bold">The Beat Lab Crest Tee</h3>
+                            <span class="text-lg font-black text-white">€25</span>
+                        </div>
+                    </div>
+                    <button onclick="openCheckoutModal('The Beat Lab Crest Tee', 25)" class="hardware-pad w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-3 rounded-xl transition text-sm">
+                        Buy Now - €25 💳
+                    </button>
+                </div>
+ 
+                <!-- Product 2 -->
+                <div class="hardware-pad bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between space-y-6">
+                    <div class="space-y-4">
+                        <div class="w-full h-48 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-center text-6xl">🎸</div>
+                        <div class="flex justify-between items-start">
+                            <h3 class="text-lg font-bold">Fretboard & Vinyl Tee</h3>
+                            <span class="text-lg font-black text-white">€25</span>
+                        </div>
+                    </div>
+                    <button onclick="openCheckoutModal('Fretboard & Vinyl Tee', 25)" class="hardware-pad w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-3 rounded-xl transition text-sm">
+                        Buy Now - €25 💳
+                    </button>
+                </div>
+ 
+                <!-- Product 3 -->
+                <div class="hardware-pad bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between space-y-6">
+                    <div class="space-y-4">
+                        <div class="w-full h-48 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-center text-6xl">🎚️</div>
+                        <div class="flex justify-between items-start">
+                            <h3 class="text-lg font-bold">Portlaoise Sound Hoodie</h3>
+                            <span class="text-lg font-black text-white">€45</span>
+                        </div>
+                    </div>
+                    <button onclick="openCheckoutModal('Portlaoise Sound Hoodie', 45)" class="hardware-pad w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-3 rounded-xl transition text-sm">
+                        Buy Now - €45 💳
+                    </button>
+                </div>
+            </div>
+        </section>
+ 
+        <!-- SECTION 4: IRISH STORES -->
+        <section id="stores" class="space-y-8 scroll-mt-24 pt-8 border-t border-slate-900">
+            <div>
+                <h2 class="text-3xl font-extrabold tracking-tight">Recommended Music Stores</h2>
+                <p class="text-slate-400 text-sm mt-1">Trusted Irish suppliers for hardware and accessories.</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="hardware-pad bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-3">
+                    <h3 class="font-bold">DJBox.ie</h3>
+                    <p class="text-xs text-slate-400">Specialist DJ equipment in Dublin.</p>
+                    <a href="https://www.djbox.ie" target="_blank" class="text-cyan-400 text-xs font-bold block hover:underline">Visit Website ↗</a>
+                </div>
+                <div class="hardware-pad bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-3">
+                    <h3 class="font-bold">DJ Solutions</h3>
+                    <p class="text-xs text-slate-400">Pro audio & sound in Kilkenny.</p>
+                    <a href="https://www.dj-solutions.ie" target="_blank" class="text-cyan-400 text-xs font-bold block hover:underline">Visit Website ↗</a>
+                </div>
+                <div class="hardware-pad bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-3">
+                    <h3 class="font-bold">Sounds Around</h3>
+                    <p class="text-xs text-slate-400">Pro audio store in Dublin.</p>
+                    <a href="https://www.soundsaround.ie" target="_blank" class="text-cyan-400 text-xs font-bold block hover:underline">Visit Website ↗</a>
+                </div>
+                <div class="hardware-pad bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-3">
+                    <h3 class="font-bold">Anthem Music</h3>
+                    <p class="text-xs text-slate-400">Main Street, Portlaoise, Co. Laois.</p>
+                    <a href="https://downtownportlaoise.ie" target="_blank" class="text-cyan-400 text-xs font-bold block hover:underline">View Info ↗</a>
+                </div>
+            </div>
+        </section>
+ 
+    </main>
+ 
+    <!-- FOOTER -->
+    <footer class="mixing-console border-t border-slate-900 mt-28 py-12 bg-slate-950 text-slate-500 text-xs text-center">
+        <p>&copy; 2026 The Beat Lab, Portlaoise, Co. Laois. Professional DJ Tutoring & Guitar Lessons.</p>
+    </footer>
+ 
+    <!-- SECURE PAYMENT / CHECKOUT MODAL WITH PAYMENT BUTTON -->
+    <div id="checkoutModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="mixing-console rounded-3xl max-w-md w-full p-6 space-y-6 shadow-2xl relative">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <div>
+                    <h3 class="text-base font-bold text-white">Secure Studio Checkout</h3>
+                    <p id="checkoutItemName" class="text-cyan-400 font-semibold text-xs">Item Title</p>
+                </div>
+                <button onclick="closeCheckoutModal()" class="hardware-pad w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white">✕</button>
+            </div>
+            
+            <form onsubmit="handlePaymentSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Your Name</label>
+                    <input type="text" required class="hardware-pad w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500" placeholder="e.g. Cathal Scarry">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Email Address</label>
+                    <input type="email" required class="hardware-pad w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500" placeholder="cathal@example.com">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Card Details (Simulated Secure Pay)</label>
+                    <div class="hardware-pad bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-400 flex items-center justify-between">
+                        <span>🔒 4242 •••• •••• 4242</span>
+                        <span class="text-cyan-400 font-bold">TEST MODE</span>
+                    </div>
+                </div>
+ 
+                <div class="pt-2">
+                    <button type="submit" class="hardware-pad w-full bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-950 font-black py-4 rounded-xl transition text-sm shadow-xl shadow-cyan-500/20 flex items-center justify-center space-x-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                        <span id="payButtonText">Pay Now (€35)</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+ 
+    <!-- SUCCESS TOAST -->
+    <div id="toast" class="hardware-pad fixed bottom-6 right-6 bg-emerald-500 text-slate-950 px-6 py-3 rounded-2xl font-bold shadow-2xl hidden z-50">Payment Successful!</div>
+ 
+    <script>
+        let isPlaying = false, audioInterval;
+        function toggleAudio() {
+            isPlaying = !isPlaying;
+            const playIcon = document.getElementById('playIcon'), bars = document.querySelectorAll('#visualizer span');
+            if(isPlaying) {
+                playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+                audioInterval = setInterval(() => {
+                    bars.forEach(b => b.style.height = (Math.floor(Math.random() * 44) + 6) + 'px');
+                }, 150);
+            } else {
+                playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+                clearInterval(audioInterval);
+            }
+        }
+ 
+        let currentCartTotal = 0;
+        function openCheckoutModal(itemName, price) {
+            currentCartTotal = price;
+            document.getElementById('checkoutItemName').innerText = itemName + ' — €' + price;
+            document.getElementById('payButtonText').innerText = 'Pay Now (€' + price + ')';
+            document.getElementById('checkoutModal').style.display = 'flex';
+        }
+ 
+        function closeCheckoutModal() {
+            document.getElementById('checkoutModal').style.display = 'none';
+        }
+ 
+        function handlePaymentSubmit(e) {
+            e.preventDefault();
+            closeCheckoutModal();
+            
+            let cartCount = parseInt(document.getElementById('cartCount').innerText) + 1;
+            document.getElementById('cartCount').innerText = cartCount;
+ 
+            const t = document.getElementById('toast');
+            t.innerText = "Payment processed successfully! Booking confirmed.";
+            t.classList.remove('hidden');
+            setTimeout(() => t.classList.add('hidden'), 4000);
+        }
+    </script>
+</body>
+</html>
+ 
